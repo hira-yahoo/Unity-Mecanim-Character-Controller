@@ -401,7 +401,7 @@ public class StandardThirdPersonController : MonoBehaviour {
 		return moveSpeed;
 	}
 
-	bool IsJumping () {
+	public bool IsJumping () {
 		return jumping;
 	}
 
@@ -413,11 +413,11 @@ public class StandardThirdPersonController : MonoBehaviour {
 		return moveDirection;
 	}
 
-	bool IsMovingBackwards () {
+	public bool IsMovingBackwards () {
 		return movingBack;
 	}
 
-	float GetLockCameraTimer () 
+	public float GetLockCameraTimer () 
 	{
 		return lockCameraTimer;
 	}

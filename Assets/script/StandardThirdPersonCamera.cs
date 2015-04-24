@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class StandardThirdPersonCamera {
+public class StandardThirdPersonCamera : MonoBehaviour {
 
 	public Transform cameraTransform;
 	private Transform _target;
@@ -40,19 +40,19 @@ public class StandardThirdPersonCamera {
 			cameraTransform = Camera.main.transform;
 		if(!cameraTransform) {
 			Debug.Log("Please assign a camera to the StandardThirdPersonCamera script.");
-			enabled = false;	
+//			enabled = false;	
 		}
 		
 		
 		_target = transform;
 		if (_target)
 		{
-			controller = _target.GetComponent(ThirdPersonController);
+			controller = _target.GetComponent<StandardThirdPersonController>();
 		}
 		
 		if (controller)
 		{
-			CharacterController characterController = _target.GetComponent<Collider>();
+			CharacterController characterController = _target.GetComponent<CharacterController>();
 			centerOffset = characterController.bounds.center - _target.position;
 			headOffset = centerOffset;
 			headOffset.y = characterController.bounds.max.y - _target.position.y;
@@ -107,7 +107,7 @@ public class StandardThirdPersonCamera {
 			if (AngleDistance (currentAngle, originalTargetAngle) < 3.0)
 				snap = false;
 			
-			currentAngle = Mathf.SmoothDampAngle(currentAngle, targetAngle, angleVelocity, snapSmoothLag, snapMaxSpeed);
+			currentAngle = Mathf.SmoothDampAngle(currentAngle, targetAngle, ref angleVelocity, snapSmoothLag, snapMaxSpeed);
 		}
 		// Normal camera motion
 		else
@@ -122,7 +122,7 @@ public class StandardThirdPersonCamera {
 			if (AngleDistance (currentAngle, targetAngle) > 160 && controller.IsMovingBackwards ())
 				targetAngle += 180;
 			
-			currentAngle = Mathf.SmoothDampAngle(currentAngle, targetAngle, angleVelocity, angularSmoothLag, angularMaxSpeed);
+			currentAngle = Mathf.SmoothDampAngle(currentAngle, targetAngle, ref angleVelocity, angularSmoothLag, angularMaxSpeed);
 		}
 		
 		
@@ -142,7 +142,7 @@ public class StandardThirdPersonCamera {
 		
 		// Damp the height
 		float currentHeight = cameraTransform.position.y;
-		currentHeight = Mathf.SmoothDamp (currentHeight, targetHeight, heightVelocity, heightSmoothLag);
+		currentHeight = Mathf.SmoothDamp (currentHeight, targetHeight, ref heightVelocity, heightSmoothLag);
 		
 		// Convert the angle into a rotation, by which we then reposition the camera
 		Quaternion currentRotation = Quaternion.Euler (0, currentAngle, 0);
@@ -153,7 +153,8 @@ public class StandardThirdPersonCamera {
 		cameraTransform.position += currentRotation * Vector3.back * distance;
 		
 		// Set the height of the camera
-		cameraTransform.position.y = currentHeight;
+//		cameraTransform.position.y = currentHeight;
+		cameraTransform.position = new Vector3 (cameraTransform.position.x, currentHeight, cameraTransform.position.z);
 		
 		// Always look at the target	
 		SetUpRotation(targetCenter, targetHead);
@@ -199,14 +200,14 @@ public class StandardThirdPersonCamera {
 		Vector3 offsetToCenter = centerPos - cameraPos;
 		
 		// Generate base rotation only around y-axis
-		Quaternion yRotation = Quaternion.LookRotation(Vector3(offsetToCenter.x, 0, offsetToCenter.z));
+		Quaternion yRotation = Quaternion.LookRotation(new Vector3(offsetToCenter.x, 0, offsetToCenter.z));
 		
 		Vector3 relativeOffset = Vector3.forward * distance + Vector3.down * height;
 		cameraTransform.rotation = yRotation * Quaternion.LookRotation(relativeOffset);
 		
 		// Calculate the projected center position and top position in world space
-		Ray centerRay = cameraTransform.GetComponent<Camera>().ViewportPointToRay(Vector3(.5, 0.5, 1));
-		Ray topRay = cameraTransform.GetComponent<Camera>().ViewportPointToRay(Vector3(.5, clampHeadPositionScreenSpace, 1));
+		Ray centerRay = cameraTransform.GetComponent<Camera>().ViewportPointToRay(new Vector3(.5f, 0.5f, 1.0f));
+		Ray topRay = cameraTransform.GetComponent<Camera>().ViewportPointToRay(new Vector3(.5f, clampHeadPositionScreenSpace, 1.0f));
 		
 		Vector3 centerRayPos = centerRay.GetPoint(distance);
 		Vector3 topRayPos = topRay.GetPoint(distance);
