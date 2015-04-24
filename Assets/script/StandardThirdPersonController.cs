@@ -339,6 +339,8 @@ public class StandardThirdPersonController : MonoBehaviour {
 			{
 				if(controller.velocity.sqrMagnitude < 0.1) {
 					_animation.CrossFade(idleAnimation.name);
+
+					GetComponent<Animator>().SetBool("Walk", false);
 				}
 				else 
 				{
@@ -353,6 +355,8 @@ public class StandardThirdPersonController : MonoBehaviour {
 					else if(_characterState == CharacterState.Walking) {
 						_animation[walkAnimation.name].speed = Mathf.Clamp(controller.velocity.magnitude, 0.0f, walkMaxAnimationSpeed);
 						_animation.CrossFade(walkAnimation.name);	
+
+						GetComponent<Animator>().SetBool("Walk", true);
 					}
 					
 				}
