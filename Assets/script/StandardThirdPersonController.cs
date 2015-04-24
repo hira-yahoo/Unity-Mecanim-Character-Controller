@@ -4,7 +4,7 @@ using System.Collections;
 
 // Require a character controller to be attached to the same game object
 [RequireComponent(typeof(CharacterController))]
-public class ThirdPersonController : MonoBehaviour {
+public class StandardThirdPersonController : MonoBehaviour {
 
 	public AnimationClip idleAnimation;
 	public AnimationClip walkAnimation;

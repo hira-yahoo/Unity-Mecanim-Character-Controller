@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class ThirdPersonCamera {
+public class StandardThirdPersonCamera {
 
 	public Transform cameraTransform;
 	private Transform _target;
@@ -31,7 +31,7 @@ public class ThirdPersonCamera {
 	private float heightVelocity = 0.0f;
 	private float angleVelocity = 0.0f;
 	private bool snap = false;
-	private ThirdPersonController controller;
+	private StandardThirdPersonController controller;
 	private float targetHeight = 100000.0f; 
 
 	void Awake ()
@@ -39,7 +39,7 @@ public class ThirdPersonCamera {
 		if(!cameraTransform && Camera.main)
 			cameraTransform = Camera.main.transform;
 		if(!cameraTransform) {
-			Debug.Log("Please assign a camera to the ThirdPersonCamera script.");
+			Debug.Log("Please assign a camera to the StandardThirdPersonCamera script.");
 			enabled = false;	
 		}
 		
