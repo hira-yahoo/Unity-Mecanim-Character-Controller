@@ -341,22 +341,29 @@ public class StandardThirdPersonController : MonoBehaviour {
 					_animation.CrossFade(idleAnimation.name);
 
 					GetComponent<Animator>().SetBool("Walk", false);
+					GetComponent<Animator>().SetBool("Run", false);
 				}
 				else 
 				{
 					if(_characterState == CharacterState.Running) {
 						_animation[runAnimation.name].speed = Mathf.Clamp(controller.velocity.magnitude, 0.0f, runMaxAnimationSpeed);
 						_animation.CrossFade(runAnimation.name);	
+
+						GetComponent<Animator>().SetBool("Run", true);
 					}
 					else if(_characterState == CharacterState.Trotting) {
 						_animation[walkAnimation.name].speed = Mathf.Clamp(controller.velocity.magnitude, 0.0f, trotMaxAnimationSpeed);
 						_animation.CrossFade(walkAnimation.name);	
+
+						GetComponent<Animator>().SetBool("Walk", true);
+						GetComponent<Animator>().SetBool("Run", false);
 					}
 					else if(_characterState == CharacterState.Walking) {
 						_animation[walkAnimation.name].speed = Mathf.Clamp(controller.velocity.magnitude, 0.0f, walkMaxAnimationSpeed);
 						_animation.CrossFade(walkAnimation.name);	
 
 						GetComponent<Animator>().SetBool("Walk", true);
+						GetComponent<Animator>().SetBool("Run", false);
 					}
 					
 				}
